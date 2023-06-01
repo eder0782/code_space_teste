@@ -36,11 +36,12 @@ export const Container = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
+  flex-direction: column;
 `;
 
 export const FlexContainer = styled.div`
   width: 28rem;
-  min-height: 30rem;
+  min-height: 40rem;
   background: linear-gradient(160deg, purple 30%, yellow 100%);
   padding: 32px;
   border-radius: 10px;
@@ -50,6 +51,25 @@ export const FlexContainer = styled.div`
   justify-content: space-between;
   align-items: center;
   margin: 0 0 3em;
+`;
+export const Button = styled.button`
+  background-color: white;
+  color: blue;
+  border-color: blue;
+  border-radius: 5px;
+  border: 2px solid;
+  padding: 15px 32px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 16px;
+  font-weight: bold;
+  font-family: sans-serif;
+  cursor: pointer;
+  :hover {
+    background-color: blue;
+    color: white;
+  }
 `;
 // export const GridContainer = styled.div`
 //   margin: 0;
