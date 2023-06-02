@@ -1,4 +1,5 @@
 import React, { useCallback, useState } from "react";
+import { CreateArrayImage, Shuffle, CardType } from "@/utils/create";
 
 import {
   FlexContainer,
@@ -8,72 +9,59 @@ import {
   Button,
 } from "./teste.style";
 import Image from "next/image";
+import { type } from "os";
 
 export default function Teste() {
-  const [listImages, setListImages] = useState<string[]>([]);
+  const [listImages, setListImages] = useState<CardType[]>(
+    Shuffle(CreateArrayImage())
+  );
+  const [selected, setSelected] = useState<undefined | CardType>(undefined);
+  const [gameFinish, setGameFinish] = useState(false);
+  const [countHit, setCountHit] = useState(0);
 
-  const imagens: string[] = [
-    "angularjs.png",
-    "css3.png",
-    "vue-js.png",
-    "stack-overflow.png",
-    "raspberry-pi.png",
-    "python.png",
-    "nodejs.png",
-    "mongodb.png",
-    "html5.png",
-    "github.png",
-    "angularjs.png",
-    "css3.png",
-    "vue-js.png",
-    "stack-overflow.png",
-    "raspberry-pi.png",
-    "python.png",
-    "nodejs.png",
-    "mongodb.png",
-    "html5.png",
-    "github.png",
-  ];
+  const handleClick = (currentCard: CardType) => {
+    setListImages((prev) =>
+      prev.map((card) =>
+        card.id === currentCard.id
+          ? { ...card, clickable: false, showed: true }
+          : card
+      )
+    );
 
-  const listImagesGenerate = useCallback(() => {
-    let indice = imagens.length;
+    if (!selected) {
+      setSelected(currentCard);
+      return;
+    }
 
-    const shufle = new Promise<any>((resolve) => {
-      while (indice) {
-        // atenção para o pós-incremento indice--
-        const indiceAleatorio = Math.floor(Math.random() * indice--);
-        [imagens[indice], imagens[indiceAleatorio]] = [
-          imagens[indiceAleatorio],
-          imagens[indice],
-        ];
-      }
+    if (currentCard.id === selected.id) {
+      console.log("acertou");
+      console.log(currentCard.id, "currentCard.id");
+      console.log(selected.id, "selected.id");
+      setSelected(undefined);
+    } else {
+      console.log("errou");
+      setListImages((prev) =>
+        prev.map((card) =>
+          card.id === currentCard.id || selected.id === card.id
+            ? { ...card, clickable: true, showed: false }
+            : card
+        )
+      );
+    }
+  };
 
-      if (indice <= 0) {
-        return resolve(true);
-      }
-      ///
-    });
-
-    const exec = async () => {
-      await shufle
-        .then(() => setListImages(imagens))
-        .catch((e) => console.log(e, ":error"));
-    };
-
-    exec();
-  }, [setListImages]);
-
-  React.useEffect(() => {
-    listImagesGenerate();
-  }, []);
-
+  const Reset = () => {
+    window.location.reload();
+  };
   return (
     <Container>
-      <Button>RESET</Button>
+      <Button onClick={Reset}>RESET</Button>
       <FlexContainer>
         {listImages.length > 0 ? (
           listImages.map((value, index) => {
-            return <Imagem image={value} key={index}></Imagem>;
+            return (
+              <Imagem card={value} func={handleClick} key={index}></Imagem>
+            );
           })
         ) : (
           <></>
@@ -83,16 +71,25 @@ export default function Teste() {
   );
 }
 
-const Imagem = (props: any) => {
+type PropsIMG = {
+  card: CardType;
+  func: (card: CardType) => void;
+};
+const Imagem: React.FC<PropsIMG> = ({ card, func }) => {
   const [hidde, setHidde] = React.useState(true);
-  const { image } = props;
+  const handleClick = () => {
+    if (card.clickable) {
+      func(card);
+      setHidde(!hidde);
+    }
+  };
 
   return (
-    <Wrapper onClick={() => setHidde(!hidde)} ativo={hidde}>
+    <Wrapper onClick={() => handleClick()} ativo={hidde}>
       <ImageContainer ativo={hidde}>
-        {image && (
+        {card.src && (
           <Image
-            src={`/images/${image}`}
+            src={card.src}
             alt="Vercel Logo"
             width={80}
             height={80}
