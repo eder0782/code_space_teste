@@ -42,7 +42,7 @@ export const Container = styled.div`
 export const FlexContainer = styled.div`
   width: 28rem;
   min-height: 40rem;
-  background: linear-gradient(160deg, purple 30%, yellow 100%);
+  background: linear-gradient(160deg, blue 30%, green 100%);
   padding: 32px;
   border-radius: 10px;
   box-shadow: 12px 15px 20px 0 rgb(46 61 73 / 50%);
@@ -56,15 +56,16 @@ export const Button = styled.button`
   background-color: white;
   color: blue;
   border-color: blue;
-  border-radius: 5px;
+  border-radius: 8px;
   border: 2px solid;
-  padding: 15px 32px;
+  padding: 10px 25px;
   text-align: center;
   text-decoration: none;
   display: inline-block;
   font-size: 16px;
   font-weight: bold;
   font-family: sans-serif;
+  transition: 0.3s;
   cursor: pointer;
   :hover {
     background-color: blue;

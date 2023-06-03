@@ -1,4 +1,4 @@
-import React, { useCallback, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import { CreateArrayImage, Shuffle, CardType } from "@/utils/create";
 
 import {
@@ -13,12 +13,13 @@ import { type } from "os";
 
 export default function Teste() {
   const [listImages, setListImages] = useState<CardType[]>(
-    Shuffle(CreateArrayImage())
+    []
   );
   const [selected, setSelected] = useState<undefined | CardType>(undefined);
   const [gameFinish, setGameFinish] = useState(false);
   const [countHit, setCountHit] = useState(0);
-
+ 
+  useEffect(()=>{setListImages(Shuffle(CreateArrayImage()))},[])
   const handleClick = (currentCard: CardType) => {
     setListImages((prev) =>
       prev.map((card) =>
@@ -33,20 +34,20 @@ export default function Teste() {
       return;
     }
 
-    if (currentCard.id === selected.id) {
-      console.log("acertou");
-      console.log(currentCard.id, "currentCard.id");
-      console.log(selected.id, "selected.id");
+    if (currentCard.src === selected.src) {
+      
       setSelected(undefined);
     } else {
-      console.log("errou");
-      setListImages((prev) =>
+    
+      setTimeout(()=>{ setListImages((prev) =>
         prev.map((card) =>
           card.id === currentCard.id || selected.id === card.id
             ? { ...card, clickable: true, showed: false }
             : card
         )
-      );
+      );},1000)
+     
+      setSelected(undefined);
     }
   };
 
@@ -76,17 +77,17 @@ type PropsIMG = {
   func: (card: CardType) => void;
 };
 const Imagem: React.FC<PropsIMG> = ({ card, func }) => {
-  const [hidde, setHidde] = React.useState(true);
+  
   const handleClick = () => {
     if (card.clickable) {
       func(card);
-      setHidde(!hidde);
+    
     }
   };
 
   return (
-    <Wrapper onClick={() => handleClick()} ativo={hidde}>
-      <ImageContainer ativo={hidde}>
+    <Wrapper onClick={() => handleClick()} ativo={!card.showed}>
+      <ImageContainer ativo={!card.showed}>
         {card.src && (
           <Image
             src={card.src}
